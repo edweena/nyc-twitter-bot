@@ -10,6 +10,39 @@ var Tweet = require('./tweet.model');
 var Twit = require('twit');
 var config = require('../../config/config');
 var Bot = require('../../lib/bot');
+var cleverbot = require('cleverbot.io');
+var Q = require('q');
+
+var cBot = new cleverbot('iLYB4QucluiEclsI','cZbfRI6JtkJEOvMRAvoq1zSSK0FZxWul');
+cBot.setNick('RBMA-Bot');
+
+
+
+
+// -------------------------------------------------
+//
+// Reponses
+// 
+// -------------------------------------------------
+
+// ------------------------------------------------
+// What will the robot say
+//
+var replyTrack = [
+	'⚡Storm Rave maps coming soon. Stay posted.⚡',
+	'We’re still keeping the Storm Rave location under wraps, but we’ll have a map for you shortly.⚡⚡',
+	'Check back later for your Storm Rave location map.⚡☢',
+	'Storm Rave is coming… We’ll let you know where soon.⚡☢',
+	'This hashtag will soon guide you to Storm Rave. Please check back later.⚡⚡',
+	'Try using this hashtag again in some days. I might have more info.⚡⚡',
+	'Yo. Storm Rave location will be announced soon. Try again in a few days.⚡☢',
+	'I wish I had more information for you about Storm Rave at the moment, but I do not. Try again soon.⚡⚡',
+	'Frankie Bones, Adam X and more. More info coming soon. Try this hashtag in some days.⚡⚡',
+	'Hello dear friend. I currently do not have all the info for Storm Rave in my database. But will soon.⚡⚡ '
+
+];
+
+
 
 
 // -------------------------------------------------
@@ -22,23 +55,41 @@ var bot = new Bot(config.twitter);
 
 
 
-// ------------------------------------------------
-// What will the robot say
-//
-var replyTrack = 'Dog.';
 
+function clever(text){
+	var deferred = Q.defer();
 
+	cBot.create(function(err, session){
+		if (err){
+			console.log(err);
+			deferred.reject(err);
+		}
 
+		else{
+			cBot.ask(text, function(err, response){
+				if (err){
+					console.log(err);
+					deferred.reject(err);
+				}
+
+				else{
+					deferred.resolve(response);
+				}
+			});
+		}
+	});
+
+	return deferred.promise;
+}
 
 
 // -------------------------------------------------
 //
-// Listen on Tweets
+// Listen on tweets
 // 
 // -------------------------------------------------
-var stream = T.stream('statuses/filter', {track: '#rbmabot'});
 
-
+var stream = T.stream('statuses/filter', {track: '#stormrave'});
 
 
 // ------------------------------------------------
@@ -46,9 +97,16 @@ var stream = T.stream('statuses/filter', {track: '#rbmabot'});
 //
 
 stream.on('tweet', function(tweet){
-	
-	
 
+
+	// ------------------------------------------------
+	// After response
+	//
+	
+	function callback(){
+		console.log('Finished');
+	}
+		
 	// ------------------------------------------------
 	// Setup object to save
 	//
@@ -71,14 +129,19 @@ stream.on('tweet', function(tweet){
 		}
 		else{
 			console.log('Tweet saved');
-			bot.tweet(tweetObject.username, replyTrack, tweetObject.id, callback);
+
+
+			var randomResponse = replyTrack[Math.floor(Math.random() * replyTrack.length)];
+
+
+			bot.tweet(tweetObject.username, randomResponse, tweetObject.id, callback);
+			
 		}
 	});
-
-	var callback = function(){
-		console.log('Tweet sent to ' +  tweetObject.username);
-	};
 });
+
+
+	
 
 
 // -------------------------------------------------
@@ -99,6 +162,12 @@ stream.on('disconnect', function(disconnectMessage){
 stream.on('warning', function(warning){
 	console.log(warning);
 });
+
+
+
+
+
+
 
 
 
