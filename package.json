@@ -1,0 +1,24 @@
+{
+  "name": "nyc-twitter-bot",
+  "version": "0.0.1",
+  "description": "Twitter Bot For Rave",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "RBMA",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.12.3",
+    "cleverbot.io": "^1.0.3",
+    "cors": "^2.6.0",
+    "express": "^4.12.3",
+    "lodash": "^3.7.0",
+    "mongoose": "^4.0.2",
+    "socket.io": "^1.3.5",
+    "twit": "^1.1.20"
+  },
+  "devDependencies": {
+    "nodemon": "^1.3.7"
+  }
+}
