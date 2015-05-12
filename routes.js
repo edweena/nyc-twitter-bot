@@ -8,8 +8,10 @@
 
 module.exports = function(app){
 	app.use('/api/tweets', require('./api/tweet'));
+	app.use('/api/responses', require('./api/response'));
 
-	app.route('/', function(req, res){
-		res.json({message: 'RBMA NYC Twitter Bot'});
+
+	app.get('/', function(req, res){
+		res.json({message: 'RBMA Twitter Bot'});
 	});
 };
