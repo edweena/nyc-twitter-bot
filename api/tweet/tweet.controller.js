@@ -11,7 +11,6 @@ var Response = require('../response/response.model');
 var Twit = require('twit');
 var config = require('../../config/config');
 var Bot = require('../../lib/bot');
-var request = require('request');
 
 
 
